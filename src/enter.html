@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>融数金服</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+  <link rel="stylesheet" href="./styles/app.css">
+  <link rel="stylesheet" href="./styles/1px.css">
+</head>
+<body id="app">
+<div class="list bg-while">
+  <div class="item item-input ui-border-b">
+    <span class="input-label">用户id</span>
+    <input type="text" v-model="third.userid" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">支付方式</span>
+    <input type="text" v-model="third.payway" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">支付通道</span>
+    <input type="text" v-model="third.channelCode" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">产品号</span>
+    <input type="text" v-model="third.productid" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">机构码</span>
+    <input type="text" v-model="third.rootinstcd" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">请求号</span>
+    <input type="text" v-model="third.userorderid" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">请求时间</span>
+    <input type="text" v-model="third.ordertime" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">业务相关方</span>
+    <input type="text" v-model="third.userrelateid" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">金额</span>
+    <input type="text" v-model="third.amount" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">手续费</span>
+    <input type="text" v-model="third.unitprice" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">商户名称</span>
+    <input type="text" v-model="third.merchantName" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">注册手机号</span>
+    <input type="text" v-model="third.mobile" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">注册时间</span>
+    <input type="text" v-model="third.registerTime" placeholder=""/>
+  </div>
+  <div class="item item-input ui-border-b">
+    <span class="input-label">返回页面</span>
+    <input type="text" v-model="third.backUrl" placeholder=""/>
+  </div>
+  <div class="item item-input">
+    <span class="input-label">通知地址</span>
+    <input type="text" v-model="third.notifyUrl" placeholder=""/>
+  </div>
+</div>
+<div class="pad">
+  <div class="btn btn-block" @click="pay">
+    测试支付
+  </div>
+</div>
+</body>
+
+<script src="//cdn.bootcss.com/vue/1.0.17/vue.min.js"></script>
+<script src="http://apps.bdimg.com/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      third: {
+        payway: '1',
+        channelCode: '1002',
+        ordertime: getTime(),
+        productid: 'P000011',
+        rootinstcd: 'M000005',
+        userid: 'h6001',
+        userorderid: new Date().getTime(),
+        userrelateid: '102',
+        amount: '1',
+        unitprice: '0',
+        merchantName: '淘宝',
+        mobile: '13604183072',
+        registerTime: getTime(),
+        backUrl: 'http://www.baidu.com',
+        notifyUrl: 'http://www.baidu.com',
+        useStatus: ''
+      }
+    },
+    methods: {
+      pay: function () {
+        location.href = 'http://172.16.36.50:3000/index?' + toStr(this.third);
+      }
+    }
+  });
+
+  // 单数补0
+  function todo(n) {
+    n = parseInt(n);
+    return n < 10 ? '0' + n : '' + n;
+  }
+  // 获取当前时间 yyyy-MM-dd HH:mm:ss
+  function getTime() {
+    var oDate = new Date();
+    return oDate.getFullYear() + '-' + todo(oDate.getMonth() + 1) + '-' + todo(oDate.getDate()) + ' ' + todo(oDate.getHours()) + ':' + todo(oDate.getMinutes()) + ':' + todo(oDate.getSeconds());
+  }
+
+  function toStr(data) {
+    var str = '';
+
+    for (var i in data) {
+      data[i] && (str += i + '=' + data[i] + '&');
+    }
+    var MISC = CryptoJS.MD5(data.ordertime + data.productid + data.rootinstcd + data.userid + data.userorderid + data.userrelateid + data.amount + data.unitprice + '12356780Poi)(*');
+
+    return str + 'MISC=' + MISC;
+
+  }
+
+</script>
+</html>
